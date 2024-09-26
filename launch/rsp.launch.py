@@ -13,7 +13,7 @@ import xacro
 def generate_launch_description():
 
     # Check if we're told to use sim time
-    use_sim_time = LaunchConfiguration('use_sim_time')
+    use_sim_time = LaunchConfiguration('use_sim_time') # pulls data from user inputted variable
 
     # Process the URDF file
     pkg_path = os.path.join(get_package_share_directory('my_bot'))
@@ -33,7 +33,7 @@ def generate_launch_description():
     # Launch!
     return LaunchDescription([
         DeclareLaunchArgument(
-            'use_sim_time',
+            'use_sim_time', # creates a user input variable as a parameter that a user can change at runtime
             default_value='false',
             description='Use sim time if true'),
 

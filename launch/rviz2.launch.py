@@ -8,18 +8,19 @@ import os
 
 def generate_launch_description():
     # Path to your URDF file
-    urdf_file = os.path.join(
-        get_package_share_directory('my_bot'),  # Replace with your package name
-        'description',
-        'robot.urdf.xacro'  # Replace with your actual URDF file name
+    urdf_file = os.path.join( 
+        get_package_share_directory('my_bot'),  # acceses directory of package my_bot
+        'description', # look inside description folder
+        'robot.urdf.xacro'  # look at selected file
     )
-    robot_description_content = xacro.process_file(urdf_file).toxml()
+
+    robot_description_content = xacro.process_file(urdf_file).toxml() # convert Xacro file to xml
 
     # Path to your RViz configuration file
-    rviz_config_file = os.path.join(
-        get_package_share_directory('my_bot'),  # Replace with your package name
-        'config',
-        'view_bot.rviz'  # Replace with your actual RViz config file name
+    rviz_config_file = os.path.join( 
+        get_package_share_directory('my_bot'),  # Access directory of package my_bot
+        'config', # look in config folder
+        'view_bot.rviz'  # look at selected file
     )
 
     return LaunchDescription([
