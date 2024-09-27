@@ -15,12 +15,20 @@ def generate_launch_description():
     )
     robot_description_content = xacro.process_file(urdf_file).toxml()
 
-    # Path to your RViz configuration file
+    # Path to RViz configuration file
     rviz_config_file = os.path.join(
         get_package_share_directory('my_bot'),  # Replace with your package name
         'config',
-        'drive_bot.rviz'  # Replace with your actual RViz config file name
+        'sim_lidar.rviz'  # Replace with your actual RViz config file name
     )
+
+    #Path to Gazebo world file
+    gazebo_world_file = os.path.join(
+        get_package_share_directory('my_bot'),  # Replace with your package name
+        'worlds',  # Make sure this is the correct directory
+        'test.world'  # Replace with your actual world file name
+    )
+
 
     # Launch robot state publisher node
     node_robot_state_publisher = Node(
@@ -35,6 +43,7 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
+                launch_arguments={'world':gazebo_world_file}.items()
              )
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
