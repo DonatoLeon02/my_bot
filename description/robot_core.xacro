@@ -21,7 +21,7 @@
 
     <link name="chassis">
         <visual>
-            <origin xyz="0.15 0.0 0.075" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.01 0.0 0.075" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <box size="0.3 0.3 0.15"/>
             </geometry>
@@ -29,14 +29,14 @@
         </visual>
 
         <collision>
-            <origin xyz="0.15 0.0 0.075" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.01 0.0 0.075" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <box size="0.3 0.3 0.15"/>
             </geometry>
         </collision>
 
         <xacro:inertial_box mass="0.5" x="0.3" y="0.3" z="0.1">
-            <origin xyz="0.15 0.0 0.075" rpy="0.0 0.0 0.0"/>
+            <origin xyz="0.01 0.0 0.075" rpy="0.0 0.0 0.0"/>
         </xacro:inertial_box>
     </link>
 
@@ -111,7 +111,7 @@
     <joint name="joint_name" type="fixed">
         <parent link="chassis"/>
         <child link="caster_wheel"/>
-        <origin xyz="0.24 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="-.085 0.0 0.0" rpy="0.0 0.0 0.0"/>
     </joint>
 
     <link name="caster_wheel">
@@ -119,7 +119,7 @@
             <geometry>
                 <sphere radius="0.05"/>
             </geometry>
-            <material name="black" />
+            <material name="orange" />
         </visual>
 
         <collision>
