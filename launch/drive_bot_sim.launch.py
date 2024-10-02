@@ -26,7 +26,7 @@ def generate_launch_description():
     gazebo_world_file = os.path.join(
         get_package_share_directory('my_bot'),  # Replace with your package name
         'worlds',  # Make sure this is the correct directory
-        'test.world'  # Replace with your actual world file name
+        'maze.world'  # Replace with your actual world file name
     )
 
 
