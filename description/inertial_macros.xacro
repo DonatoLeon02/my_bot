@@ -8,9 +8,12 @@
         <inertial>
             <xacro:insert_block name="origin"/>
             <mass value="${mass}" />
-            <inertia ixx="${(2/5) * mass * (radius*radius)}" ixy="0.0" ixz="0.0"
-                    iyy="${(2/5) * mass * (radius*radius)}" iyz="0.0"
-                    izz="${(2/5) * mass * (radius*radius)}" />
+            <inertia ixx="2.01673334059732"
+        ixy="1.20967138671942E-08"
+        ixz="-0.0349149976927564"
+        iyy="1.89100103005672"
+        iyz="1.82499927047358E-06"
+        izz="3.72874010035965" />
         </inertial>
     </xacro:macro>  
 
