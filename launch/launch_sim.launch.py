@@ -4,7 +4,7 @@ from ament_index_python.packages import get_package_share_directory
 
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
@@ -37,6 +37,32 @@ def generate_launch_description():
                                    '-entity', 'my_bot'],
                         output='screen')
 
+    delay_spawn = TimerAction(
+        period=5.0,  # Delay in seconds
+        actions=[
+            
+            # Spawn controllers (make sure they are defined in your config)
+            Node(
+                package="controller_manager",
+                executable="spawner",
+                arguments=["diff_cont"],
+            ),
+            Node(
+                package="controller_manager",
+                executable="spawner",
+                arguments=["joint_broad"],
+            ),
+            Node(
+                package='teleop_twist_keyboard',
+                executable='teleop_twist_keyboard',
+                name='teleop_keyboard',
+                output='screen',
+                remappings=[('/cmd_vel', '/diff_cont/cmd_vel_unstamped')],
+                prefix='gnome-terminal --'
+            )
+        ]
+    )
+
 
 
     # Launch them all!
@@ -44,4 +70,5 @@ def generate_launch_description():
         rsp,
         gazebo,
         spawn_entity,
+        delay_spawn
     ])
