@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="robot">
+
+    <xacro:arg name="prefix" default="" />
+    <xacro:arg name="use_mock_hardware" default="false" />
+
+    <!-- include file that contains robot core description -->
+    <xacro:include filename="robot_core.xacro" />
+
+    <!-- Simulate Lidar /> -->
+    <xacro:include filename="lidar.xacro" />
+
+    <!-- include xacro that defines odrive diffbot control  /> -->
+    <xacro:include filename="Odrive_ros2_control.xacro" /> 
+
+    <xacro:diffbot_ros2_control
+      name="DiffBot" prefix="$(arg prefix)" use_mock_hardware="$(arg use_mock_hardware)"/>
+
+</robot>
