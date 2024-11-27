@@ -13,11 +13,11 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler,IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
-
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -66,9 +66,9 @@ def generate_launch_description():
             "realbot_controllers.yaml",
         ]
     )
-#    rviz_config_file = PathJoinSubstitution(
-#        [FindPackageShare("ros2_control_demo_description"), "diffbot/rviz", "diffbot.rviz"]
-#    )
+    rviz_config_file = PathJoinSubstitution(
+       [FindPackageShare("my_bot"), "config", "real_bot.rviz"]
+   )
 
     control_node = Node(
         package="controller_manager",
@@ -93,7 +93,7 @@ def generate_launch_description():
        executable="rviz2",
        name="rviz2",
        output="log",
-       # arguments=["-d", rviz_config_file],
+       arguments=["-d", rviz_config_file],
        condition=IfCondition(gui),
     )
 
@@ -125,21 +125,43 @@ def generate_launch_description():
         )
     )
 
-    delay_teleop_twist_keyboard_after_controller = RegisterEventHandler(
+    # delay_teleop_twist_keyboard_after_controller = RegisterEventHandler(
+    #     event_handler=OnProcessExit(
+    #         target_action=robot_controller_spawner,
+    #         on_exit=[
+    #             Node(
+    #                 package='teleop_twist_keyboard',
+    #                 executable='teleop_twist_keyboard',
+    #                 name='teleop_keyboard',
+    #                 output='screen',
+    #                 remappings=[('/cmd_vel', '/my_bot/cmd_vel')],
+    #                 parameters=[{'stamped': True}],
+    #                 prefix='gnome-terminal --'
+    #             ),
+    #         ],
+    #     )
+    # )
+
+    joystick_launch_file = PathJoinSubstitution([FindPackageShare("my_bot"), "launch", "joystick.launch.py"])
+
+    # Register event handler to delay joystick nodes after controller spawner
+    delay_joystick_launch_after_controller = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=robot_controller_spawner,
             on_exit=[
-                Node(
-                    package='teleop_twist_keyboard',
-                    executable='teleop_twist_keyboard',
-                    name='teleop_keyboard',
-                    output='screen',
-                    remappings=[('/cmd_vel', '/my_bot/cmd_vel')],
-                    parameters=[{'stamped': True}],
-                    prefix='gnome-terminal --'
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(joystick_launch_file)
                 ),
             ],
         )
+    )
+
+    # Path to the RPLIDAR launch file
+    rplidar_launch_file = PathJoinSubstitution([FindPackageShare("rplidar_ros"), "launch", "rplidar_a1_launch.py"])
+
+    # Include the RPLIDAR launch file
+    rplidar_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(rplidar_launch_file)
     )
 
     nodes = [
@@ -148,7 +170,9 @@ def generate_launch_description():
         joint_state_broadcaster_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
-        delay_teleop_twist_keyboard_after_controller
+        #delay_teleop_twist_keyboard_after_controller,
+        delay_joystick_launch_after_controller,
+        rplidar_node
     ]
 
     return LaunchDescription(declared_arguments + nodes)
